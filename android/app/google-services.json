@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "895990217257",
+    "firebase_url": "https://diaryapp-93501-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "diaryapp-93501",
+    "storage_bucket": "diaryapp-93501.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895990217257:android:d139bfabd5decc61a2ba38",
+        "android_client_info": {
+          "package_name": "com.example.diaryapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "895990217257-94ltttkvur4l925omh97jklpne1f51in.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.diaryapp",
+            "certificate_hash": "b45281f403ab8519957184a829117259ffe032e6"
+          }
+        },
+        {
+          "client_id": "895990217257-i3au9q7th5a6n1pnuiho11kjrvfv12sk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.diaryapp",
+            "certificate_hash": "86b795ef0fce80ffa7ed5fc96d2223b163af3622"
+          }
+        },
+        {
+          "client_id": "895990217257-drvdo42jefa7acv1a60qu2942gc5ktuk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkdOJ1EMLNtwUDt1xpzDDFzBERd4zWAek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "895990217257-drvdo42jefa7acv1a60qu2942gc5ktuk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "895990217257-6clntri71akna4nofv7ti5bcuem7ogsm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.diaryapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
