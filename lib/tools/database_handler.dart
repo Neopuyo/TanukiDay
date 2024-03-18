@@ -1,13 +1,17 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer' as dev;
 
 import 'package:diaryapp/models/entry.dart';
+import 'package:diaryapp/models/tuple.dart';
 
 
 class DatabaseHandler {
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  // [!] The stream version is used in list view
   Future<List<Entry>> getEntriesFrom({required String usermail}) async {
     final List<Entry> entries = [];
 
@@ -21,10 +25,10 @@ class DatabaseHandler {
         entries.add(entry);
       }
       // DEBUG ONLY
-      _printEntries(entries: entries);
+      // _printEntries(entries: entries);
     });
 
-    entries.sort((a, b) => a.date.compareTo(b.date));
+    entries.sort((a, b) => b.date.compareTo(a.date));
     return entries;
   }
 
@@ -39,9 +43,60 @@ class DatabaseHandler {
         final Entry entry = Entry.fromFirestore(data);
         entries.add(entry);
       }
+
+      entries.sort((a, b) => b.date.compareTo(a.date));
+      // _printEntries(entries: entries);
       return entries;
     });
   }
+
+  Stream<Map<String, int>> getFeelingsStream(String usermail) {
+
+    Map<String, int> feelingResume = {};
+    for (var entry in Entry.feelingToIconMap.entries) {
+      feelingResume[entry.value] = 0;
+    }
+
+    return _db.collection("entries")
+        .where("usermail", isEqualTo: usermail)
+        .snapshots()
+        .map((QuerySnapshot snapshot) {
+          for (var doc in snapshot.docs) {
+            final data = doc.data() as Map<String, dynamic>;
+            final Entry entry = Entry.fromFirestore(data);
+            if (feelingResume.containsKey(entry.feeling)) {
+              feelingResume[entry.feeling] = feelingResume[entry.feeling]! + 1;
+            }
+          }
+          _printFeelings(feelingResume: feelingResume);
+          return feelingResume;
+    });
+  }
+
+  Stream<Tuple2<List<Entry>, Map<String, int>>> getEntriesAndFeelingsStream(String usermail) {
+  return _db.collection("entries")
+      .where("usermail", isEqualTo: usermail)
+      .snapshots()
+      .map((QuerySnapshot snapshot) {
+    final List<Entry> entries = [];
+    final Map<String, int> feelingResume = {};
+    for (var entry in Entry.feelingToIconMap.entries) {
+      feelingResume[entry.value] = 0;
+    }
+    for (var doc in snapshot.docs) {
+      final data = doc.data() as Map<String, dynamic>;
+      final Entry entry = Entry.fromFirestore(data);
+      entries.add(entry);
+      if (feelingResume.containsKey(entry.feeling)) {
+        feelingResume[entry.feeling] = feelingResume[entry.feeling]! + 1;
+      }
+    }
+    entries.sort((a, b) => b.date.compareTo(a.date));
+    // _printEntries(entries: entries);
+    // _printFeelings(feelingResume: feelingResume);
+    return Tuple2(entries, feelingResume);
+  });
+}
 
   void addEntry({required Entry entry}) {
     _db.collection("entries")
@@ -86,6 +141,17 @@ class DatabaseHandler {
       }
     } else {
       dev.log("[Empty Entries List]");
+    }
+  }
+
+  void _printFeelings({required Map<String, int> feelingResume}) {
+    if (feelingResume.isNotEmpty) {
+      dev.log("[Feeling Resume]");
+      for (var entry in feelingResume.entries) {
+        dev.log("> ${entry.key} : ${entry.value}");
+      }
+    } else {
+      dev.log("[Empty Feeling Resume]");
     }
   }
 

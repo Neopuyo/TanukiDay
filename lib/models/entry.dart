@@ -45,6 +45,7 @@ class Entry {
     Feeling.angry: 'sentiment_very_dissatisfied_outlined',
     Feeling.unknown: 'sentiment_neutral_outlined',
   };
+  static Map<Feeling, String> get feelingToIconMap => _feelingToIconMap;
 
   static const Map<String, IconData> _stringToIconDataMap = {
     'sentiment_very_satisfied_outlined'   :       Icons.sentiment_very_satisfied_outlined,
