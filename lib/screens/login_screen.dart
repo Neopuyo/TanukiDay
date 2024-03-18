@@ -6,14 +6,14 @@ import 'package:provider/provider.dart';
 import 'dart:developer' as dev;
 
 
-class GoogleSignInScreen extends StatefulWidget {
-  const GoogleSignInScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<GoogleSignInScreen> createState() => _GoogleSignInScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
+class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void initState() {

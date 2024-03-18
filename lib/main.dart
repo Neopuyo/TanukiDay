@@ -1,6 +1,7 @@
 import 'package:diaryapp/design/tanuki_theme.dart';
 import 'package:diaryapp/models/entry.dart';
 import 'package:diaryapp/providers/user_state_provider.dart';
+import 'package:diaryapp/screens/agenda_screen.dart';
 import 'package:diaryapp/screens/entry_form.dart';
 import 'package:diaryapp/screens/login_screen.dart';
 import 'package:diaryapp/screens/start_screen.dart';
@@ -48,7 +49,14 @@ class MyApp extends StatelessWidget {
         GoRoute(
           path: '/login',
           builder: (context, state) {
-            return const GoogleSignInScreen();
+            return const SignInScreen();
+          },
+        ),
+
+        GoRoute(
+          path: '/agenda',
+          builder: (context, state) {
+            return const AgendaScreen();
           },
         ),
 
