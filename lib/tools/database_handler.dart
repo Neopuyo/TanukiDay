@@ -1,17 +1,15 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:developer' as dev;
-
 import 'package:diaryapp/models/entry.dart';
 import 'package:diaryapp/models/tuple.dart';
+import 'dart:developer' as dev;
 
 
 class DatabaseHandler {
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // [!] The stream version is used in list view
+  // [K] The stream version is used in list view
+  // Not used anymore but interesting
   Future<List<Entry>> getEntriesFrom({required String usermail}) async {
     final List<Entry> entries = [];
 
@@ -32,6 +30,9 @@ class DatabaseHandler {
     return entries;
   }
 
+ // [K] Keeping :
+ // Entry and feeling stream are merged into one unique stream
+ // Without this it'll show duplicate content and unexpected behaviours
  Stream<List<Entry>> getEntriesStream(String usermail) {
     return _db.collection("entries")
         .where("usermail", isEqualTo: usermail)
@@ -50,6 +51,7 @@ class DatabaseHandler {
     });
   }
 
+  // [K] Keeping
   Stream<Map<String, int>> getFeelingsStream(String usermail) {
 
     Map<String, int> feelingResume = {};
@@ -68,7 +70,7 @@ class DatabaseHandler {
               feelingResume[entry.feeling] = feelingResume[entry.feeling]! + 1;
             }
           }
-          _printFeelings(feelingResume: feelingResume);
+          // _printFeelings(feelingResume: feelingResume);
           return feelingResume;
     });
   }

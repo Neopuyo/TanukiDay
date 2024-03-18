@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         GoRoute(
           path: '/',
           builder: (context, state) {
-            return const StartScreen();
+            return StartScreen();
           },
         ),
 

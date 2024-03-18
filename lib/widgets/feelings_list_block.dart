@@ -5,7 +5,9 @@ import 'package:diaryapp/widgets/miniWidgets/header_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class FeelingsListBlock extends StatelessWidget {
-  const FeelingsListBlock({super.key});
+  const FeelingsListBlock({super.key, required this.feelingsMap});
+
+  final Map<String, int> feelingsMap;
 
   @override
   Widget build(BuildContext context) {
@@ -13,18 +15,12 @@ class FeelingsListBlock extends StatelessWidget {
       children: [
         HeaderCard(
           children: [
-            Text('Feelings', style: Theme.of(context).textTheme.displaySmall),
+            Text('Feelings resume', style: Theme.of(context).textTheme.displaySmall),
           ],
         ),
-
         const SizedBox(height: 4),
-
-        FeelingsList(),
-
+        FeelingsList(feelingsMap: feelingsMap),
       ],
     );
   }
-
-    
-
 }

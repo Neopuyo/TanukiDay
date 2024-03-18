@@ -1,16 +1,14 @@
 import 'package:diaryapp/design/tanuki_colors.dart';
 import 'package:diaryapp/design/tanuki_theme.dart';
 import 'package:diaryapp/models/entry.dart';
-import 'package:diaryapp/providers/user_state_provider.dart';
-import 'package:diaryapp/tools/database_handler.dart';
 import 'package:diaryapp/widgets/miniWidgets/content_card_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 
 class FeelingsList extends StatelessWidget {
-  FeelingsList({super.key});
+  const FeelingsList({super.key, required this.feelingsMap});
 
-  final _dbHandler = DatabaseHandler();
+  final Map<String, int> feelingsMap;
 
   Icon _feelingIconMake(String feeling) {
     return Icon(
@@ -62,30 +60,11 @@ class FeelingsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final usermail = Provider.of<UserState>(context, listen: false).email;
-
     return ContentCard(
-      child: StreamBuilder<Map<String, int>>(
-          stream: _dbHandler.getFeelingsStream(usermail), 
-          builder: (BuildContext context, AsyncSnapshot<Map<String, int>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final Map<String, int> feelingsMap = snapshot.data ?? {};
-
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: _feelingListMake(feelingsMap),
-                );
-              }      
-          },
-          
-
-      ),
-  
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _feelingListMake(feelingsMap),
+        ),
     );
   }
 

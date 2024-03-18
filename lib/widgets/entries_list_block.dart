@@ -1,10 +1,13 @@
+import 'package:diaryapp/models/entry.dart';
 import 'package:diaryapp/widgets/entries_list.dart';
 import 'package:diaryapp/widgets/miniWidgets/header_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class EntriesListBlock extends StatefulWidget {
-  const EntriesListBlock({super.key});
+  const EntriesListBlock({super.key, required this.entries});
+
+  final List<Entry> entries;
 
   @override
   State<StatefulWidget> createState() {
@@ -54,9 +57,11 @@ class _EntriesListBlockState extends State<EntriesListBlock> {
 
           // [2] ENTRY LIST
           Expanded(
-              child: EntriesList(
-            displayLimit: _displayAll ? 365 : 2,
-          )),
+            child: EntriesList(
+              entries: widget.entries,
+              displayLimit: _displayAll ? 365 : 2,
+            )
+          ),
         ],
       ),
     );
