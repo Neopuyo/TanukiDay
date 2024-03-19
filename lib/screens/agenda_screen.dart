@@ -2,6 +2,8 @@
 
 
 import 'package:diaryapp/screens/base_scaffold.dart';
+import 'package:diaryapp/widgets/event_table_calendar.dart';
+import 'package:diaryapp/widgets/table_calendar.dart';
 import 'package:flutter/material.dart';
 
 class AgendaScreen extends StatelessWidget {
@@ -12,11 +14,8 @@ class AgendaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return BaseScaffold(
-      body: Container(
-        height: 258,
-        width: 49,
-        color: Colors.grey,),
-
+      // body: TableCalendarWidget(),
+      body: CalendarTableEntries(),
     );
 
   }
