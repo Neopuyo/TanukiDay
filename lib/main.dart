@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
         GoRoute(
           path: '/agenda',
           builder: (context, state) {
-            return const AgendaScreen();
+            return AgendaScreen();
           },
         ),
 
@@ -99,7 +99,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      // home: StartScreen(),
       title: 'Tanuki Day',
       routerConfig: _makeRouter(context: context),
       theme: TanukiTheme.getTanukiTheme(),

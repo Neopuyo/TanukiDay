@@ -1,7 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import 'package:diaryapp/tools/calendar_tools.dart';
+import 'package:diaryapp/models/entry.dart';
+import 'dart:collection';
 
 import 'dart:developer' as dev;
 
@@ -9,7 +11,9 @@ import 'dart:developer' as dev;
 
 class CalendarTableEntries extends StatefulWidget {
 
-  const CalendarTableEntries({super.key});
+  const CalendarTableEntries({super.key, required this.linkedHashEntries});
+
+  final LinkedHashMap<DateTime, List<Entry>> linkedHashEntries;
 
   @override
   State<StatefulWidget> createState() => _CalendarTableEntriesState();
@@ -94,7 +98,7 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
         children: [
 
           TableCalendar<Event>(
-            firstDay: kFirstDay,
+            firstDay: kFirstDay, // [!] changer / se reapproprier ces globales
             lastDay: kLastDay,
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
@@ -150,18 +154,18 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
           ),
 
 
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Today: $kToday"),
-              Text("Selected day: $_selectedDay"),
-              Text("Focused day: $_focusedDay"),
-              Text("Range start: $_rangeStart"),
-              Text("Range end: $_rangeEnd"),
-              Text("Calendar format: $_calendarFormat"),
-            ],
-          ),
+         Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Today: $kToday"),
+                Text("Selected day: $_selectedDay"),
+                Text("Focused day: $_focusedDay"),
+                Text("Range start: $_rangeStart"),
+                Text("Range end: $_rangeEnd"),
+                Text("Calendar format: $_calendarFormat"),
+              ],
+            ),
 
 
         ],

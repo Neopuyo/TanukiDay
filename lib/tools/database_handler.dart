@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diaryapp/models/entry.dart';
 import 'package:diaryapp/models/tuple.dart';
+import 'dart:collection';
 import 'dart:developer' as dev;
+
+import 'package:table_calendar/table_calendar.dart';
 
 
 class DatabaseHandler {
@@ -76,29 +79,58 @@ class DatabaseHandler {
   }
 
   Stream<Tuple2<List<Entry>, Map<String, int>>> getEntriesAndFeelingsStream(String usermail) {
-  return _db.collection("entries")
+    return _db.collection("entries")
+        .where("usermail", isEqualTo: usermail)
+        .snapshots()
+        .map((QuerySnapshot snapshot) {
+      final List<Entry> entries = [];
+      final Map<String, int> feelingResume = {};
+      for (var entry in Entry.feelingToIconMap.entries) {
+        feelingResume[entry.value] = 0;
+      }
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final Entry entry = Entry.fromFirestore(data);
+        entries.add(entry);
+        if (feelingResume.containsKey(entry.feeling)) {
+          feelingResume[entry.feeling] = feelingResume[entry.feeling]! + 1;
+        }
+      }
+      entries.sort((a, b) => b.date.compareTo(a.date));
+      // _printEntries(entries: entries);
+      // _printFeelings(feelingResume: feelingResume);
+      return Tuple2(entries, feelingResume);
+    });
+  }
+
+  Stream<LinkedHashMap<DateTime, List<Entry>>> getCalendarFormatedEntriesStream(String usermail) {
+    return _db.collection("entries")
       .where("usermail", isEqualTo: usermail)
       .snapshots()
       .map((QuerySnapshot snapshot) {
-    final List<Entry> entries = [];
-    final Map<String, int> feelingResume = {};
-    for (var entry in Entry.feelingToIconMap.entries) {
-      feelingResume[entry.value] = 0;
-    }
-    for (var doc in snapshot.docs) {
-      final data = doc.data() as Map<String, dynamic>;
-      final Entry entry = Entry.fromFirestore(data);
-      entries.add(entry);
-      if (feelingResume.containsKey(entry.feeling)) {
-        feelingResume[entry.feeling] = feelingResume[entry.feeling]! + 1;
-      }
-    }
-    entries.sort((a, b) => b.date.compareTo(a.date));
-    // _printEntries(entries: entries);
-    // _printFeelings(feelingResume: feelingResume);
-    return Tuple2(entries, feelingResume);
-  });
-}
+
+          final map = LinkedHashMap<DateTime, List<Entry>>(
+            equals: isSameDay,
+            hashCode: _getHashCode,
+          );
+
+          for (var qdoc in snapshot.docs) {
+            final data = qdoc.data() as Map<String, dynamic>;
+            final Entry entry = Entry.fromFirestore(data);
+            final date = entry.date;
+
+            if (map.containsKey(date)) {
+              map[date]!.add(entry);
+            } else {
+              map[date] = [entry];
+            }
+          }
+
+          return map;
+      });
+  }
+
+
 
   void addEntry({required Entry entry}) {
     _db.collection("entries")
@@ -132,6 +164,11 @@ class DatabaseHandler {
         .catchError((error) => dev.log("Failed to delete entry with date: $entryDate"));
       }
     });
+  }
+
+  // PRIVATE TOOLS
+  int _getHashCode(DateTime key) {
+    return key.day * 1000000 + key.month * 10000 + key.year;
   }
 
   // DEBUG TOOL
