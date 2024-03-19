@@ -1,5 +1,4 @@
 
-
 import 'package:diaryapp/design/tanuki_colors.dart';
 import 'package:diaryapp/design/tanuki_theme.dart';
 import 'package:diaryapp/models/entry.dart';
@@ -9,12 +8,14 @@ import 'package:diaryapp/tools/database_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer' as dev;
 
 class EntryForm extends StatefulWidget {
-  const EntryForm({super.key, required this.isCreation, required this.entry});
+  const EntryForm({super.key, required this.isCreation, required this.entry, this.goBackPath = '/'});
 
   final bool isCreation;
   final Entry? entry;
+  final String goBackPath;
 
   @override
   State<EntryForm> createState() => _EntryFormState();
@@ -65,7 +66,6 @@ class _EntryFormState extends State<EntryForm> {
 
   @override
   Widget build(BuildContext context) { 
-    
     final String usermail = Provider.of<UserState>(context, listen: false).email;
     return BaseScaffold(
       title: widget.isCreation ? 'Add entry' : 'Read entry',
@@ -153,7 +153,7 @@ class _EntryFormState extends State<EntryForm> {
                         usermail: usermail,
                       );
                       _dbHandler.addEntry(entry: newEntry);
-                      context.go('/');
+                      context.go(widget.goBackPath);
                     } else {
                       // UPDATE ENTRY
                       final updatedEntry = Entry(
@@ -176,7 +176,7 @@ class _EntryFormState extends State<EntryForm> {
               // CANCEL BUTTON
               IconButton(
                 onPressed: () {
-                  context.go('/');
+                  context.go(widget.goBackPath);
                 },
                 icon: const Icon(Icons.cancel),
               ),
@@ -202,7 +202,6 @@ class _EntryFormState extends State<EntryForm> {
                               onPressed: () {
                                 _dbHandler.deleteEntry(entryDate: widget.entry!.date);
                                 context.go('/');
-                                Navigator.of(context).pop();
                               },
                             ),
                           ],
@@ -213,11 +212,9 @@ class _EntryFormState extends State<EntryForm> {
                   icon: const Icon(Icons.backspace_outlined),
                 ),
 
-
                 ],
               ),
 
-                
             ],
           ),
         ),

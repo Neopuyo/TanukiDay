@@ -7,11 +7,10 @@ import 'package:intl/intl.dart';
 
 class EntryListTile extends StatelessWidget {
   final Entry entry;
-  final void Function() onDelete;
   final void Function() onTap;
 
 
-  const EntryListTile({super.key, required this.entry, required this.onDelete, required this.onTap});
+  const EntryListTile({super.key, required this.entry, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +53,10 @@ class EntryListTile extends StatelessWidget {
           ],
         ),
         trailing: Icon(
-          Entry.getIconDataFromString(feeling: entry.feeling),
-          color: feelingColor,
-          size: 28.0
-        ),
-
+              Entry.getIconDataFromString(feeling: entry.feeling),
+              color: feelingColor,
+              size: 28.0
+            ),
         onTap: () => onTap(),
       ),
     );

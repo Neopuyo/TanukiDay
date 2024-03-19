@@ -66,7 +66,8 @@ class MyApp extends StatelessWidget {
             final params = state.extra as Map<String, dynamic>?;
             final bool? isCreation = params?['isCreation'] as bool?;
             final Entry? entry = params?['entry'] as Entry?;
-            return EntryForm(isCreation: isCreation ?? false, entry: entry);
+            final String? goBackPath = params?['goBackPath'] as String?;
+            return EntryForm(isCreation: isCreation ?? false, entry: entry, goBackPath: goBackPath ?? '/');
           },
         ),
 

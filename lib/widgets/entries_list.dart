@@ -28,10 +28,9 @@ class EntriesList extends StatelessWidget {
           },
           child: EntryListTile(
             entry: entry, 
-            onDelete: () => _dbHandler.deleteEntry(entryDate: entry.date),
             onTap: () {
               context.go('/entry-detail', extra: {'isCreation': false, 'entry': entry});
-            }
+            },
           ),
         );
       },

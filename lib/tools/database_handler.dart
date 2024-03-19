@@ -126,6 +126,10 @@ class DatabaseHandler {
             }
           }
 
+          map.forEach((date, entries) {
+            entries.sort((a, b) => b.date.compareTo(a.date));
+          });
+
           return map;
       });
   }
