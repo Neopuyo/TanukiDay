@@ -1,4 +1,5 @@
 
+import 'package:diaryapp/widgets/entries_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:diaryapp/tools/calendar_tools.dart';
@@ -20,7 +21,7 @@ class CalendarTableEntries extends StatefulWidget {
 }
 
 class _CalendarTableEntriesState extends State<CalendarTableEntries> {
-  late final ValueNotifier<List<Event>> _selectedEvents;
+  late final ValueNotifier<List<Entry>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
@@ -34,7 +35,7 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
     super.initState();
 
     _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _selectedEvents = ValueNotifier(_getEntriesForDay(_selectedDay!));
   }
 
   @override
@@ -43,17 +44,30 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
     super.dispose();
   }
 
-  List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
-    return kEvents[day] ?? [];
+  // List<Event> _getEventsForDay(DateTime day) {
+  //   // Implementation example
+  //   return kEvents[day] ?? [];
+  // }
+
+   List<Entry> _getEntriesForDay(DateTime day) {
+    return widget.linkedHashEntries[day] ?? [];
   }
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
+  // List<Event> _getEventsForRange(DateTime start, DateTime end) {
+  //   // Implementation example
+  //   final days = daysInRange(start, end);
+
+  //   return [
+  //     for (final d in days) ..._getEntriesForDay(d),
+  //   ];
+  // }
+
+  List<Entry> _getEntriesForRange(DateTime start, DateTime end) {
     // Implementation example
     final days = daysInRange(start, end);
 
     return [
-      for (final d in days) ..._getEventsForDay(d),
+      for (final d in days) ..._getEntriesForDay(d),
     ];
   }
 
@@ -67,7 +81,7 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
         _rangeSelectionMode = RangeSelectionMode.toggledOff;
       });
 
-      _selectedEvents.value = _getEventsForDay(selectedDay);
+      _selectedEvents.value = _getEntriesForDay(selectedDay);
     }
   }
 
@@ -82,11 +96,11 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
 
     // `start` or `end` could be null
     if (start != null && end != null) {
-      _selectedEvents.value = _getEventsForRange(start, end);
+      _selectedEvents.value = _getEntriesForRange(start, end);
     } else if (start != null) {
-      _selectedEvents.value = _getEventsForDay(start);
+      _selectedEvents.value = _getEntriesForDay(start);
     } else if (end != null) {
-      _selectedEvents.value = _getEventsForDay(end);
+      _selectedEvents.value = _getEntriesForDay(end);
     }
   }
 
@@ -97,7 +111,7 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
       Column(
         children: [
 
-          TableCalendar<Event>(
+          TableCalendar<Entry>(
             firstDay: kFirstDay, // [!] changer / se reapproprier ces globales
             lastDay: kLastDay,
             focusedDay: _focusedDay,
@@ -106,7 +120,7 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
             rangeEndDay: _rangeEnd,
             calendarFormat: _calendarFormat,
             rangeSelectionMode: _rangeSelectionMode,
-            eventLoader: _getEventsForDay,
+            eventLoader: _getEntriesForDay,
             startingDayOfWeek: StartingDayOfWeek.monday,
             calendarStyle: CalendarStyle(
               // Use `CalendarStyle` to customize the UI
@@ -127,12 +141,17 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
           ),
           const SizedBox(height: 8.0),
           Expanded(
-            child: ValueListenableBuilder<List<Event>>(
+            child: ValueListenableBuilder<List<Entry>>(
               valueListenable: _selectedEvents,
               builder: (context, value, _) {
                 return ListView.builder(
                   itemCount: value.length,
                   itemBuilder: (context, index) {
+                    return EntryListTile(
+                      entry: value[index], 
+                      onDelete: () => dev.log("delete entry"), 
+                      onTap: () => dev.log("read entry"),
+                    );
                     return Container(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 12.0,
