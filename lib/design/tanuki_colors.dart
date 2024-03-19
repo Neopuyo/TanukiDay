@@ -11,7 +11,6 @@ class TanukiColor {
   static const PRIMARY_WRITE_UP                         = Color(0xFF0D637E);
     static const PRIMARY_WRITE_UP_L1                    = Color(0xFF0E7999);
 
-
   static const TEXT_COLOR                               = Color(0xFF9e9e9e);
   static const BODY_COLOR                               = Color(0xFF474764);
   static const BLACK                                    = Color(0xFF000000);

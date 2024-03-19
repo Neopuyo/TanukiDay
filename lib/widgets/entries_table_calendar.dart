@@ -21,7 +21,6 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
  
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
-  CalendarFormat _calendarFormat = CalendarFormat.month;
 
   final _dbHandler = DatabaseHandler();
   late final DateTime _today;
@@ -69,32 +68,12 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
           lastDay: _lastDay,
           focusedDay: _focusedDay,
           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-          calendarFormat: _calendarFormat,
           eventLoader: _getEntriesForDay,
           startingDayOfWeek: StartingDayOfWeek.monday,
-          calendarStyle: const CalendarStyle(
-            markerDecoration: BoxDecoration(
-              color: TanukiColor.SECONDARY,
-              shape: BoxShape.circle
-              ),
-            todayDecoration: BoxDecoration(
-              color: TanukiColor.PRIMARY_WRITE_UP,
-              shape: BoxShape.circle
-            ),
-            selectedDecoration: BoxDecoration(
-              color: TanukiColor.PRIMARY,
-              shape: BoxShape.circle
-            ),
-            outsideDaysVisible: false,
-          ),
+          calendarStyle: _makeCalendarStyle(),
+          headerStyle: _makeHeaderStyle(),
+          daysOfWeekStyle: _makeDaysOfWeekStyle(),
           onDaySelected: _onDaySelected,
-          onFormatChanged: (format) {
-            if (_calendarFormat != format) {
-              setState(() {
-                _calendarFormat = format;
-              });
-            }
-          },
           onPageChanged: (focusedDay) {
             _focusedDay = focusedDay;
           },
@@ -136,6 +115,54 @@ class _CalendarTableEntriesState extends State<CalendarTableEntries> {
           ),
         ),
       ],
+    );
+  }
+
+  CalendarStyle _makeCalendarStyle() {
+    return const CalendarStyle(
+      markerDecoration: BoxDecoration(
+        color: TanukiColor.SECONDARY,
+        shape: BoxShape.circle
+        ),
+      todayDecoration: BoxDecoration(
+        color: TanukiColor.PRIMARY_WRITE_UP,
+        shape: BoxShape.circle
+      ),
+      selectedDecoration: BoxDecoration(
+        color: TanukiColor.PRIMARY,
+        shape: BoxShape.circle
+      ),
+      outsideDaysVisible: true,
+      outsideTextStyle: TextStyle(
+        color: TanukiColor.BODY_COLOR,
+      ),
+      defaultTextStyle: TextStyle(
+        color: TanukiColor.TEXT_COLOR,
+      ),
+      weekendTextStyle: TextStyle(
+        color: TanukiColor.SECONDARY,
+      ),
+      weekNumberTextStyle: TextStyle(
+        color: TanukiColor.ACCENT,
+      ),
+    );
+  }
+
+  HeaderStyle _makeHeaderStyle() {
+    return const HeaderStyle(
+      formatButtonVisible: false,
+      titleCentered: true,     
+    );
+  }
+
+  DaysOfWeekStyle _makeDaysOfWeekStyle() {
+    return const DaysOfWeekStyle(
+       weekdayStyle: TextStyle(
+        color: TanukiColor.PRIMARY,
+      ),
+      weekendStyle: TextStyle(
+        color: TanukiColor.SECONDARY,
+      ),
     );
   }
 }

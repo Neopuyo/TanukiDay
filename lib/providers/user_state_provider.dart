@@ -52,7 +52,7 @@ class UserState extends ChangeNotifier {
     _displayName = user.displayName ?? '';
     _email = user.email ?? '';
     _photoURL = user.photoURL ?? '';
-    _printUserInfo(user); // [!] DEBUG ONLY
+    _printUserInfo(user); // [N] DEBUG ONLY
 
   }
 
@@ -68,7 +68,7 @@ class UserState extends ChangeNotifier {
     return logstate;
   }
 
-  // [!] DEBUG ONLY
+  // [N] DEBUG ONLY
   _printUserInfo(User user) {
     for (var userInfo in user.providerData) {
       dev.log("  Provider-specific UID: ${userInfo.uid}");
