@@ -10,28 +10,23 @@ class LogHandler {
   LogHandler._privateConstructor();
 
   static Future<bool> signInWithGoogle() async {
-      try {
-        dev.log('before await GoogleSignIn().signIn()');
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-        dev.log('after await GoogleSignIn().signIn()');
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-        final GoogleSignInAuthentication? googleAuth =
-            await googleUser?.authentication;
-        dev.log("GoogleSignInAuthentication? googleAuth = ${googleAuth.toString()}");
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
-        );
-        dev.log("GoogleAuthProvider.credential = ${credential.toString()}");
-
-        await FirebaseAuth.instance.signInWithCredential(credential);
-        return true;
-      } on Exception catch (e) {
-        dev.log('exception->$e');
-        return false;
-      }
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      return true;
+    } on Exception catch (e) {
+      dev.log('exception->$e');
+      return false;
     }
+  }
 
   static Future<bool> signInWithGithub({ required BuildContext context}) async {
       try {
