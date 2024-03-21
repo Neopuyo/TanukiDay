@@ -17,7 +17,6 @@
 
 **OAuth and login**  
 \- [Firebase](#firebase)  
-\- [Kotlin, Gradle, emulator fixes](#kotlin---gradle---emulator-fixes)  
 \- [Authentication](#authentication)  
 &emsp; \- [Google sign in](#google-sign-in)  
 &emsp; \- [Github sign in](#github-sign-in)  
@@ -26,7 +25,9 @@
 \- [Database in Firebase](#database-in-firebase)  
 &emsp; \- [Realtime Database](#realtime-database)  
 &emsp; \- [Firestore Database](#firestore-database)  
-\- [Build a Calendar based on firestore data](#build-a-calendar-based-on-firestore-data)
+\- [Build a Calendar based on firestore data](#build-a-calendar-based-on-firestore-data)  
+**Fixes**  
+\- [Kotlin, Gradle, emulator fixes](#kotlin---gradle---emulator-fixes)  
 
 ## Firebase
 
@@ -80,73 +81,6 @@ In *lib/main.dart*, import the Firebase core plugin and the configuration file y
     );
 ```
 
-## Kotlin - Gradle - Emulator `Fixes`
-
-<span style="font-size: 8px;">[Go back to table of content](#table-of-contents)</span>
-
-> There are probably similar issues related to iOS emulator, but for this project i only test my app on a pixel 6 Android one.
-
-**Multidex `Fix`**  
-A problem about `multidex` can occure if the number of methods in project is bigger than 65,536. It can be be resolved following this [stackoverflow post](https://stackoverflow.com/questions/55591958/flutter-firestore-causing-d8-cannot-fit-requested-classes-in-a-single-dex-file)  
-```dart
-// android/app/build.gradle
-defaultConfig {
-    ...
-
-    multiDexEnabled true
-}
-
-dependencies {
-    ...
-
-    implementation 'androidx.multidex:multidex:2.0.1'
-}
-```
-
-**Kotlin Gradle version `Fix`**  
-
-[Issues report like : "Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 1.5.1, expected version is 1.1.15"](https://stackoverflow.com/questions/67699823/module-was-compiled-with-an-incompatible-version-of-kotlin-the-binary-version-o/74425347#74425347)
-
-> after adding some package, there were conflicts about the Kotlin version used in project 
-
-```gradle
-    // [build.gradle (android project level)]
-    // i added this entire block
-    buildscript {
-        // the last release of Kotlin at :
-        // https://kotlinlang.org/docs/releases.html#release-details
-        ext.kotlin_version = '1.9.23'
-        repositories {
-            google()
-            jcenter()
-        }
-
-        dependencies {
-            classpath 'com.android.tools.build:gradle:7.3.0'
-            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        }
-    }
-```
-
-```gradle
-    // [settings.gradle]
-    plugins {
-        id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-        id "com.android.application" version "7.3.0" apply false
-        // This line seems necessary :
-        id "org.jetbrains.kotlin.android" version "1.9.23" apply false 
-    }
-```
-
-**Emulator Browser display only a white or black screen `Fix`**
-
-[StackOverflow fix](https://stackoverflow.com/questions/70656197/google-chrome-open-with-white-screen-on-android-emulator)  
-Create or open the advancedFeatures.ini file at *~/.android/advancedFeatures.ini* Then add the following lines:  
-
-```bash
-Vulkan = off
-GLDirectMem = on
-```
 
 ## Authentication
 
@@ -455,3 +389,72 @@ Here's the calendar widget code, in [entries_table_calendar.dart](./lib/widgets/
 | Calendar | Daily Entries |
 | --- | --- |
 | ![calendar](.screenshots/calendar_top.png) | ![entries of day](.screenshots/calendar_bot.png) |
+
+## Kotlin - Gradle - Emulator `Fixes`
+
+<span style="font-size: 8px;">[Go back to table of content](#table-of-contents)</span>
+
+> There are probably similar issues related to iOS emulator, but for this project i only test my app on a pixel 6 Android one.
+
+**Multidex `Fix`**  
+A problem about `multidex` can occure if the number of methods in project is bigger than 65,536. It can be be resolved following this [stackoverflow post](https://stackoverflow.com/questions/55591958/flutter-firestore-causing-d8-cannot-fit-requested-classes-in-a-single-dex-file)  
+```dart
+// android/app/build.gradle
+defaultConfig {
+    ...
+
+    multiDexEnabled true
+}
+
+dependencies {
+    ...
+
+    implementation 'androidx.multidex:multidex:2.0.1'
+}
+```
+
+**Kotlin Gradle version `Fix`**  
+
+[Issues report like : "Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 1.5.1, expected version is 1.1.15"](https://stackoverflow.com/questions/67699823/module-was-compiled-with-an-incompatible-version-of-kotlin-the-binary-version-o/74425347#74425347)
+
+> after adding some package, there were conflicts about the Kotlin version used in project 
+
+```gradle
+    // [build.gradle (android project level)]
+    // i added this entire block
+    buildscript {
+        // the last release of Kotlin at :
+        // https://kotlinlang.org/docs/releases.html#release-details
+        ext.kotlin_version = '1.9.23'
+        repositories {
+            google()
+            jcenter()
+        }
+
+        dependencies {
+            classpath 'com.android.tools.build:gradle:7.3.0'
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        }
+    }
+```
+
+```gradle
+    // [settings.gradle]
+    plugins {
+        id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+        id "com.android.application" version "7.3.0" apply false
+        // This line seems necessary :
+        id "org.jetbrains.kotlin.android" version "1.9.23" apply false 
+    }
+```
+
+**Emulator Browser display only a white or black screen `Fix`**
+
+[StackOverflow fix](https://stackoverflow.com/questions/70656197/google-chrome-open-with-white-screen-on-android-emulator)  
+Create or open the advancedFeatures.ini file at *~/.android/advancedFeatures.ini* Then add the following lines:  
+
+```bash
+Vulkan = off
+GLDirectMem = on
+```
+
